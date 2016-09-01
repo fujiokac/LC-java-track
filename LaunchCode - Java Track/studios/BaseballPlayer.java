@@ -69,6 +69,10 @@ public class BaseballPlayer {
 		return output;
 	}
 	
+	public String toString() {
+		return this.getStats() + this.listGames();
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		BaseballPlayer john = new BaseballPlayer("John", 36, -1);
@@ -79,10 +83,9 @@ public class BaseballPlayer {
 		john.newGame("May 3", 99, 5, 5);
 		jenny.newGame("Jan 7", 100, 13, 5);
 		jenny.newGame("Feb 16", 101, 13, 3);
-		System.out.print(john.getStats());
-		System.out.print(john.listGames());
-		System.out.print(jenny.getStats());
-		System.out.print(jenny.listGames());
+		System.out.print(john);
+		System.out.print(jenny);
+		
 	}
 
 }

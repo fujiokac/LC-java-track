@@ -32,7 +32,7 @@ public class RectangleTester {
 		Rectangle test = new Rectangle(x, y);
 		assertEquals("isSquare should return false", x == y, test.isSquare());
 		test = new Rectangle(x, x);
-		assertEquals("isSquare should return true", x == x, test.isSquare());
+		assertEquals("isSquare should return true", true, test.isSquare());
 	}
 	
 	@Test

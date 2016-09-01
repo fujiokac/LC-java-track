@@ -51,7 +51,7 @@ public class Robot {
 		return Math.sqrt(X*X + Y*Y);
 	}
 	
-	public String status() {
+	public String toString() {
 		return "Robot " + this.name + ": (" + this.posX + "," + this.posY + ") Speed: " + this.speed + " Direction: " + this.getDirection();
 	}
 	
@@ -74,27 +74,6 @@ public class Robot {
 		return posY;
 	}
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Robot robot1 = new Robot("robot 1", 0, 0, 10, 0);
-		Robot robot2 = new Robot("robot 2", 0, 0, 3, 90);
-		
-		System.out.println(robot1.status());
-		System.out.println(robot2.status());
-		System.out.println("Distance: " + robot1.distance(robot2));
-		robot1.move(3);
-		robot2.move(1);
-		
-		robot1.rotate(true);
-		robot2.rotate(false);
 	
-		
-		robot1.move(1);
-		robot2.move(1);
-		
-		System.out.println(robot1.status());
-		System.out.println(robot2.status());
-		System.out.println("Distance: " + robot1.distance(robot2));
-	}
 
 }

@@ -29,13 +29,23 @@ public class Rectangle {
 		return this.getArea() < rect.getArea();
 	}
 	
+	public String toString() {
+		String output = "";
+		for(int l = 0; l < length; l++) {
+			for(int w = 0; w < width; w++) {
+				output += 'X';
+			}
+			output += System.lineSeparator();
+		}
+		return output;
+	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Rectangle one = new Rectangle(2,2);
-		Rectangle two = new Rectangle(1,3);
+		Rectangle two = new Rectangle(5,6);
 		
-		System.out.println(one.getArea() +" "+ one.getPerimeter() +" "+ one.isSquare() +" "+ one.isSmaller(two));
-		System.out.println(two.getArea() +" "+ two.getPerimeter() +" "+ two.isSquare() +" "+ two.isSmaller(one));
+		System.out.println(one);
+		System.out.println(two);
 	}
 
 }

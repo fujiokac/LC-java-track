@@ -85,7 +85,7 @@ public class RobotMenu {
 	
 	private void DisplayRobots() {
 		for(int i = 0, n = robots.size(); i < n; i++) {
-			System.out.println((i+1) + ") " + robots.get(i).status());
+			System.out.println((i+1) + ") " + robots.get(i));
 		}
 	}
 	
@@ -112,7 +112,7 @@ public class RobotMenu {
 			System.out.println("Error in AlterRobot, Illegal call");
 		}
 		
-		System.out.println("Updated status: " + altered.status());
+		System.out.println("Updated status: " + altered);
 		return;
 	}
 	

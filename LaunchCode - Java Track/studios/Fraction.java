@@ -28,7 +28,7 @@ public class Fraction {
 		return b == 0 ? a : getGCD(b, a%b);
 	}
 	
-	public String print() {
+	public String toString() {
 		return num +"/"+ den;
 	}
 	
@@ -42,8 +42,8 @@ public class Fraction {
 		Fraction half = fiveten.simplify();
 		Fraction recip = fiveten.getReciprocal();
 		
-		System.out.println(fiveten.print() +" + "+ half.print() +" = "+ fiveten.add(half).print());
-		System.out.println(fiveten.print() +" * "+ recip.print() +" = "+ fiveten.mult(recip).print());
+		System.out.println(fiveten +" + "+ half +" = "+ fiveten.add(half));
+		System.out.println(fiveten +" * "+ recip +" = "+ fiveten.mult(recip));
 		
 	}
 

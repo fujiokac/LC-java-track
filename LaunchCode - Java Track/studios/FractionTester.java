@@ -9,7 +9,7 @@ public class FractionTester {
 		Fraction half = new Fraction(1,2);
 		String expected = "1/2";
 		
-		assertEquals("Print Failed", expected, half.print());
+		assertEquals("Print Failed", expected, half.toString());
 	}
 	
 	// All other tests will fail if this test fails
