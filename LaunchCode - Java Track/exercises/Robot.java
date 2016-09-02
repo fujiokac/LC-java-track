@@ -1,8 +1,8 @@
 
 public class Robot {
 	private String name;
-	private int posX, posY;
-	private int speed;
+	protected int posX, posY;
+	protected int speed;
 	
 	private int[][] dirs = {
 			{1,0},
@@ -11,7 +11,7 @@ public class Robot {
 			{0,-1}
 	};
 	// index of dirs
-	private int direction;
+	protected int direction;
 
 	public Robot(String name, int posX, int posY, int speed, int degrees) {
 		this.name = name;
