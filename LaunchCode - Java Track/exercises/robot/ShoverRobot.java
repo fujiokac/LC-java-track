@@ -1,3 +1,4 @@
+package robot;
 
 public class ShoverRobot extends Robot {
 	int strength;
@@ -11,11 +12,10 @@ public class ShoverRobot extends Robot {
 	public void Shove(Robot other) {
 		this.posX = other.getPosX();
 		this.posY = other.getPosY();
-		Robot temp = this;
+		Robot temp = this.clone();
 		temp.move(strength);
 		other.posX = temp.getPosX();
 		other.posY = temp.getPosY();
-		
 		System.out.println("Pak Chooie Unf");
 		return;
 	}

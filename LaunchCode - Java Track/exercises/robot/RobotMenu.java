@@ -1,8 +1,9 @@
+package robot;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class RobotMenu {
-	private ArrayList<Robot> robots;
+	protected ArrayList<Robot> robots;
 	private Scanner input;
 	
 	public static void main(String[] args) {
@@ -89,6 +90,7 @@ public class RobotMenu {
 		}
 	}
 	
+	
 	private Robot SelectRobot() {
 		int size = robots.size();
 		if(size > 0) {
@@ -125,4 +127,5 @@ public class RobotMenu {
 		
 		return;
 	}
+	
 }

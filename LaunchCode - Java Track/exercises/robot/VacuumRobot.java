@@ -1,3 +1,4 @@
+package robot;
 import java.util.ArrayList;
 
 public class VacuumRobot extends Robot {

@@ -1,3 +1,4 @@
+package robot;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 
@@ -63,18 +64,25 @@ public class RobotTest {
 		ShoverRobot shover = new ShoverRobot("shover", 0, 0, 3, 1, strength);
 		Robot test = new Robot("test", 3, 4, 1, 0);
 		shover.Shove(test);
-		assertTrue("Robot improperly shoved", shover.distance(test) == shover.getSpeed() * strength);
+		assertTrue("Robot improperly shoved", (int) shover.distance(test) == shover.getSpeed() * strength);
+		
 	}
 	
 	@Test
 	public void testVacuum() {
-		int range = 5;
 		ArrayList<Robot> robots = new ArrayList<Robot>();
-		robots.add(new Robot("out", range + 1, range + 1, 1, 0));
-		robots.add(new Robot("in1", 1, 1, 1, 0));
-		robots.add(new Robot("in2", -3, -4, 1, 0));
-		VacuumRobot roomba = new VacuumRobot("roomba", 0, 0, 3, 1);
+		String testcase = "Robot out: (11,11) Speed: 1 Direction: north" + System.lineSeparator() +
+				"Robot in1: (0,0) Speed: 2 Direction: west" + System.lineSeparator() +
+				"Robot in2: (0,0) Speed: 4 Direction: south" + System.lineSeparator();
+		String result = "";
+		robots.add(new Robot("out", 11, 11, 1, 90));
+		robots.add(new Robot("in1", 1, 1, 2, 180));
+		robots.add(new Robot("in2", -4, -3, 4, 270));
+		VacuumRobot roomba = new VacuumRobot("roomba", 0, 0, 90, 10);
 		roomba.move(robots, 0);
-		//assertTrue("Distance should be 0", roomba.distance(test) == 0);
+		for(int i = 0, n = robots.size(); i < n; i++) {
+			result += robots.get(i).toString() + System.lineSeparator();
+		}
+		assertTrue("Robots not vacuumed up", result.equals(testcase));
 	}
 }
