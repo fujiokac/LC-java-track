@@ -72,9 +72,9 @@ public class RobotGUI {
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String name = (String)JOptionPane.showInputDialog(frmRobotMakerV, "What is the robot's name?", "Create a Robot", JOptionPane.PLAIN_MESSAGE);
-				int posX = getInt("Where is the robot located? (x coordinate)", "X coordinate");
-				int posY = getInt("Where is the robot located? (y coordinate)", "Y coordinate");
-				int speed = getInt("What is the speed of the robot?", "Speed");
+				int posX = getInt(frmRobotMakerV, "Where is the robot located? (x coordinate)", "X coordinate");
+				int posY = getInt(frmRobotMakerV, "Where is the robot located? (y coordinate)", "Y coordinate");
+				int speed = getInt(frmRobotMakerV, "What is the speed of the robot?", "Speed");
 				String[] directions = { "North", "South", "East", "West" };
 				String direction = (String)JOptionPane.showInputDialog(frmRobotMakerV,
 						"What direction is the robot facing?", "Direction", 
@@ -89,9 +89,9 @@ public class RobotGUI {
 		JButton btnMove = new JButton("Move");
 		btnMove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int selected = getSelected(robot_list, "Please select a robot from the list.", "No robot selected");
+				int selected = getSelected(frmRobotMakerV, robot_list, "Please select a robot from the list.", "No robot selected");
 				if(selected > 0) {
-					int time = getInt("Enter the amount of time the robot should move: ", "Time");
+					int time = getInt(frmRobotMakerV, "Enter the amount of time the robot should move: ", "Time");
 					Robot rbt = listModel.getElementAt(selected);
 					rbt.move(time);
 				}
@@ -103,7 +103,7 @@ public class RobotGUI {
 		JButton btnRotate = new JButton("Rotate");
 		btnRotate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int selected = getSelected(robot_list, "Please select a robot from the list.", "No robot selected");
+				int selected = getSelected(frmRobotMakerV, robot_list, "Please select a robot from the list.", "No robot selected");
 				if(selected > 0) {
 					Robot rbt = listModel.getElementAt(selected);
 					String[] options = {"Clockwise", "Anti-Clockwise"};
@@ -138,8 +138,8 @@ public class RobotGUI {
 		JButton btnDistance = new JButton("Determine Distance");
 		btnDistance.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int left = getSelected(list_left, "Please select a robot from the left list.", "No robot selected");
-				int right = getSelected(list_right, "Please select a robot from the right list.", "No robot selected");
+				int left = getSelected(frmRobotMakerV, list_left, "Please select a robot from the left list.", "No robot selected");
+				int right = getSelected(frmRobotMakerV, list_right, "Please select a robot from the right list.", "No robot selected");
 				if(left > 0 && right > 0) {
 					Robot robot1 = listModel.getElementAt(left);
 					Robot robot2 = listModel.getElementAt(right);
@@ -263,11 +263,11 @@ public class RobotGUI {
 		return tab_view;
 	}
 	// Prompts user for integer value, does not handle bad input
-	private int getInt(String prompt, String title) {
+	private int getInt(JFrame frame, String prompt, String title) {
 		String input = "";
 		int output = 0;
 		// do {
-			input = (String) JOptionPane.showInputDialog(frmRobotMakerV, prompt, title, JOptionPane.PLAIN_MESSAGE);
+			input = (String) JOptionPane.showInputDialog(frame, prompt, title, JOptionPane.PLAIN_MESSAGE);
 			output = Integer.parseInt(input);
 			// Catch exception here
 		// } while(output < 1);
@@ -275,10 +275,10 @@ public class RobotGUI {
 		return output;
 	}
 	// Returns index of selected JList item, Displays error with message & title if none selected
-	private int getSelected(JList list, String message, String title) {
+	private int getSelected(JFrame frame, JList list, String message, String title) {
 		int selected = list.getSelectedIndex();
 		if(selected < 0) {
-			JOptionPane.showMessageDialog(frmRobotMakerV,
+			JOptionPane.showMessageDialog(frame,
 					message,
 					title,
 				    JOptionPane.ERROR_MESSAGE);

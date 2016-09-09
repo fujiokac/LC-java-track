@@ -1,3 +1,4 @@
+package Rectangle;
 
 public class Rectangle {
 	private int length, width;

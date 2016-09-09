@@ -1,3 +1,4 @@
+package Fraction;
 
 public class Fraction {
 	private int num, den;
