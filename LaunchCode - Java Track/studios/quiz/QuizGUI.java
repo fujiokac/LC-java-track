@@ -1,8 +1,11 @@
 package quiz;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.swing.*;
 
@@ -64,15 +67,18 @@ public class QuizGUI {
 	
 	// Create the create & edit panel
 	private JPanel init_edit() {
+		// Initialize visual components
 		JPanel cards = new JPanel(new CardLayout());
-		
+		cards.setMinimumSize(frame.getSize());
+		cards.getLayout().minimumLayoutSize(cards);
 		JSplitPane tab_edit = new JSplitPane();
 		Box edit_menu = Box.createVerticalBox();
+		
 		JPanel AddQDialog = new JPanel();
+		AddQDialog.setLayout(new BorderLayout(0, 0));
 		Box SubmitCancel = Box.createHorizontalBox();
-		JSplitPane splitPane = new JSplitPane();
 		Box buttons = Box.createVerticalBox();
-		Box preview = Box.createVerticalBox();
+		Box QAview = Box.createVerticalBox();
 		JLabel lblQuestion = new JLabel();
 		DefaultListModel<String> listAnswer = new DefaultListModel<String>();
 		JList<String> list = new JList<String>(listAnswer);
@@ -80,60 +86,111 @@ public class QuizGUI {
 		
 		cards.add(tab_edit, "QuizBuilder");
 		cards.add(AddQDialog, "New Question");
+		tab_edit.setLeftComponent(edit_menu);
+		// tab_edit.setRightComponent(preview);
 		
+		QAview.add(lblQuestion);
+		QAview.add(list);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buttons, QAview);
+		// Keep divider centered
+		splitPane.setDividerLocation(.1);
+		splitPane.setResizeWeight(.1);
+		splitPane.setEnabled(false);
+		
+		AddQDialog.add(splitPane, BorderLayout.CENTER);
+		AddQDialog.add(SubmitCancel, BorderLayout.PAGE_END);
 		
 		
 		JButton btnNewQ = new JButton("Question");
 		btnNewQ.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Object[] options = {"Multiple Choice", "Fill in the Blank"};
+				// Prompt user
 				String question =
 						(String)JOptionPane.showInputDialog(frame,
 								"Please enter a question.",
 								"Add Question",
 								JOptionPane.PLAIN_MESSAGE);
-				Boolean isMC = JOptionPane.showOptionDialog(frame,
-							"Which kind of question is this?",
-							"Question Type",
-							JOptionPane.YES_NO_OPTION,
-							JOptionPane.QUESTION_MESSAGE,
-							null,
-							options,
-							options[1]) == 0 ? true:false;
-				QB.addQ(question, isMC);
+				// Update question
 				lblQuestion.setText(question);
 			}
 		});
+		buttons.add(btnNewQ);
+		
 		JButton btnNewA = new JButton("Answer");
 		btnNewA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Boolean isMC = QB.currentMC();
+				// Prompt user
 				String answer =
 						(String)JOptionPane.showInputDialog(frame,
 								"Please enter an answer.",
 								"Add Answer",
 								JOptionPane.PLAIN_MESSAGE);
-				Boolean correct = true;
-				if(isMC) {
-					Object[] options = {"Correct Answer", "Incorrect Answer"};
-					correct = JOptionPane.showOptionDialog(frame,
-							"Is this the correct answer?",
-							"Answer Type",
-							JOptionPane.YES_NO_OPTION,
-							JOptionPane.QUESTION_MESSAGE,
-							null,
-							options,
-							options[0]) == 0 ? true:false;
-				}
-				QB.addC(answer, correct);
+				// Add answer to list
 				listAnswer.add(listAnswer.size(), answer);
 			}
 		});
+		buttons.add(btnNewA);
+		
 		JButton btnEdit = new JButton("Edit");
+		buttons.add(btnEdit);
+		
 		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// Get previously input values
+				String question = lblQuestion.getText();
+				ArrayList<String> answers = Collections.list(listAnswer.elements());
+				// Check that question is completed
+				if(question.isEmpty() || answers.isEmpty()) {
+					JOptionPane.showMessageDialog(frame,
+							"Question has not been completed.",
+							"Submit failed",
+						    JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					// Check for multiple choice
+					if(answers.size() > 1) {
+						// Multiple Choice
+						// prompt for correct answer
+						if(JOptionPane.showConfirmDialog(frame,
+								"Is the correct answer selected?",
+								"Answer Type",
+								JOptionPane.YES_NO_OPTION
+								) == 0) {
+							int selected = getSelected(frame, 
+									list, 
+									"Please select the correct answer from the list", 
+									"No answer selected");
+							if(selected > -1) {
+								String answer = listAnswer.getElementAt(selected);
+								QB.addQuestion(question, answer, answers);
+							}
+						}
+						
+						// User needs to select correct answer
+						// Early exit
+						return;
+					}
+					else {
+						// Fill in the Blank
+						QB.addQuestion(question, answers.get(0));
+					}
+					// Clear data and return
+					lblQuestion.setText("");
+					listAnswer.clear();
+					CardLayout c = (CardLayout)cards.getLayout();
+					c.first(cards);
+				}
+			}
+		});
+		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// Delete existing input
+				lblQuestion.setText("");
+				listAnswer.clear();
+				// Return to previous window
 				CardLayout c = (CardLayout)cards.getLayout();
 				c.first(cards);
 			}
@@ -151,17 +208,8 @@ public class QuizGUI {
 		});
 		edit_menu.add(btnAddQ);
 		
-		tab_edit.setLeftComponent(edit_menu);
-		// tab_edit.setRightComponent(preview);
-		AddQDialog.add(splitPane, BorderLayout.CENTER);
-		AddQDialog.add(SubmitCancel, BorderLayout.PAGE_END);
-		splitPane.setLeftComponent(buttons);
-		splitPane.setRightComponent(preview);
-		buttons.add(btnNewQ);
-		buttons.add(btnNewA);
-		buttons.add(btnEdit);
-		preview.add(lblQuestion);
-		preview.add(list);
+
+		
 		SubmitCancel.add(btnSubmit);
 		SubmitCancel.add(btnCancel);
 		
