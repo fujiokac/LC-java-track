@@ -65,7 +65,7 @@ public class QuestionMC extends Question {
 	
 	
 	@Override
-	public HashMap<String, Object> output() {
+	protected HashMap<String, Object> output() {
 		HashMap<String, Object> output = super.output();
 		output.put("Choices", choices);
 		return output;

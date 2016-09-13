@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class Quiz {
 	protected ArrayList<Question> questions;
 	private int score, current;
-	private Boolean completed;
+	private Boolean completed, previous;
 	
 	public Quiz() {
 		questions = new ArrayList<Question>();
@@ -19,7 +19,7 @@ public class Quiz {
 		return questions.get(current).output();
 	}
 	
-	public Boolean answerCurrent(Object input) {
+	public void answerCurrent(Object input) {
 		Boolean correct = false;
 		
 		if(!completed) {
@@ -33,7 +33,7 @@ public class Quiz {
 			}
 		}
 		
-		return correct;
+		previous = correct;
 	}
 	
 	public int getScore() {
@@ -55,5 +55,7 @@ public class Quiz {
 	public Boolean isComplete() {
 		return completed;
 	}
-	
+	public Boolean lastAnswer() {
+		return previous;
+	}
 }

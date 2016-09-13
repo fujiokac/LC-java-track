@@ -34,7 +34,7 @@ public class Question {
 		return false;
 	}
 	
-	public HashMap<String, Object> output() {
+	protected HashMap<String, Object> output() {
 		HashMap<String, Object> output = new HashMap<String, Object>(1);
 		output.put("Question", Qtext);
 		return output;
