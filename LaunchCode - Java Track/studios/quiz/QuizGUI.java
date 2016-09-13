@@ -78,10 +78,14 @@ public class QuizGUI {
 		AddQDialog.setLayout(new BorderLayout(0, 0));
 		Box SubmitCancel = Box.createHorizontalBox();
 		Box buttons = Box.createVerticalBox();
-		Box QAview = Box.createVerticalBox();
+		JPanel QAview = new JPanel();
+		QAview.setLayout(new BorderLayout(0, 0));
 		JLabel lblQuestion = new JLabel();
+		JLabel lblQTitle = new JLabel("Question: ");
+		Box labels = Box.createHorizontalBox();
 		DefaultListModel<String> listAnswer = new DefaultListModel<String>();
 		JList<String> list = new JList<String>(listAnswer);
+		list.setAlignmentX(Component.LEFT_ALIGNMENT);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		cards.add(tab_edit, "QuizBuilder");
@@ -89,19 +93,20 @@ public class QuizGUI {
 		tab_edit.setLeftComponent(edit_menu);
 		// tab_edit.setRightComponent(preview);
 		
-		QAview.add(lblQuestion);
-		QAview.add(list);
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buttons, QAview);
-		// Keep divider centered
-		splitPane.setDividerLocation(.1);
-		splitPane.setResizeWeight(.1);
-		splitPane.setEnabled(false);
+		labels.add(lblQTitle);
+		labels.add(lblQuestion);
+		QAview.add(labels, BorderLayout.PAGE_START);
+		QAview.add(list, BorderLayout.CENTER);
+		JPanel container  = new JPanel();
+		container.setLayout(new BorderLayout(0, 0));
+		container.add(buttons, BorderLayout.LINE_START);
+		container.add(QAview, BorderLayout.CENTER);
 		
-		AddQDialog.add(splitPane, BorderLayout.CENTER);
+		AddQDialog.add(container, BorderLayout.CENTER);
 		AddQDialog.add(SubmitCancel, BorderLayout.PAGE_END);
 		
 		
-		JButton btnNewQ = new JButton("Question");
+		JButton btnNewQ = new JButton("Edit Question");
 		btnNewQ.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// Prompt user
@@ -116,7 +121,7 @@ public class QuizGUI {
 		});
 		buttons.add(btnNewQ);
 		
-		JButton btnNewA = new JButton("Answer");
+		JButton btnNewA = new JButton("Add Answer");
 		btnNewA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// Prompt user
@@ -131,7 +136,24 @@ public class QuizGUI {
 		});
 		buttons.add(btnNewA);
 		
-		JButton btnEdit = new JButton("Edit");
+		JButton btnEdit = new JButton("Edit Answer");
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int selected = getSelected(frame, list, "You must select an answer to edit", "Nothing selected");
+				if(selected >= 0) {
+					String previous = listAnswer.getElementAt(selected);
+					// Prompt user
+					String answer =
+							(String)JOptionPane.showInputDialog(frame,
+									"Current answer is: "+ previous +
+									"\nReplace with: ",
+									"Edit Answer",
+									JOptionPane.PLAIN_MESSAGE);
+					// Add answer to list
+					listAnswer.setElementAt(answer, selected);
+				}
+			}
+		});
 		buttons.add(btnEdit);
 		
 		JButton btnSubmit = new JButton("Submit");
@@ -152,24 +174,21 @@ public class QuizGUI {
 					if(answers.size() > 1) {
 						// Multiple Choice
 						// prompt for correct answer
-						if(JOptionPane.showConfirmDialog(frame,
+						int selected = getSelected(frame, 
+								list, 
+								"Please select the correct answer from the list", 
+								"No answer selected");
+						// User needs to select an answer
+						if(selected < 0) return;
+						int confirm = JOptionPane.showConfirmDialog(frame,
 								"Is the correct answer selected?",
 								"Answer Type",
-								JOptionPane.YES_NO_OPTION
-								) == 0) {
-							int selected = getSelected(frame, 
-									list, 
-									"Please select the correct answer from the list", 
-									"No answer selected");
-							if(selected > -1) {
-								String answer = listAnswer.getElementAt(selected);
-								QB.addQuestion(question, answer, answers);
-							}
-						}
-						
+								JOptionPane.YES_NO_OPTION);
 						// User needs to select correct answer
-						// Early exit
-						return;
+						if(confirm != 0) return;
+						
+						String answer = listAnswer.getElementAt(selected);
+						QB.addQuestion(question, answer, answers);
 					}
 					else {
 						// Fill in the Blank
