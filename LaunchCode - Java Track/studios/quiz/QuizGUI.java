@@ -251,13 +251,13 @@ public class QuizGUI {
 	}
 	
 	private JPanel init_quiz() {
+		// Initialize visual components
 		JPanel pnl_cards = new JPanel(new CardLayout());
 		pnl_cards.setMinimumSize(frame.getSize());
 		pnl_cards.getLayout().minimumLayoutSize(pnl_cards);
 		
 		JButton btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
-			private String str_answer;
 			public void actionPerformed(ActionEvent arg0) {
 				// Check if quiz has been finalized
 				if(quiz == null) {
@@ -276,16 +276,31 @@ public class QuizGUI {
 						    JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					// Initialize visual components
-					// pnl_quiz is quiz interface
-					JPanel pnl_quiz = new JPanel(new BorderLayout(0,0));
-					// pnl_question is question interface
-					JPanel pnl_question = new JPanel(new BorderLayout(0,0));
-					pnl_cards.add(pnl_quiz, "Quiz");
-					pnl_cards.add(pnl_question, "Question");
 					CardLayout c = (CardLayout)pnl_cards.getLayout();
 					c.next(pnl_cards);
-					
+				}
+			}
+		});
+		
+		// pnl_quiz is quiz interface
+		JPanel pnl_quiz = new JPanel(new BorderLayout(0,0)) {
+			private static final long serialVersionUID = 2L;
+			private Box box_stats;
+			
+			// Override paintComponent method
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				
+				// This part needs to update
+				box_stats = Box.createVerticalBox();
+				box_stats.add( new JLabel("Score: " + Integer.toString(quiz.getScore())));
+				box_stats.add(new JLabel("Total: " + Integer.toString(quiz.getNum())));
+				box_stats.add(new JLabel("Answered: " + Integer.toString(quiz.getCompleted())));
+				box_stats.add(new JLabel("Remaining: " + Integer.toString(quiz.getIncomplete())));
+				this.add(box_stats, BorderLayout.CENTER);
+				
+				if(!quiz.isComplete()) {
 					JButton btnNext = new JButton("Next Question");
 					btnNext.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -293,29 +308,30 @@ public class QuizGUI {
 							c.last(pnl_cards);
 						}
 					});
-					pnl_quiz.add(btnNext, BorderLayout.PAGE_END);
 					
-					// This part needs to update
-					Box box_stats = Box.createVerticalBox();
-					JLabel lbl_score = new JLabel("Score: " + Integer.toString(quiz.getScore()));
-					JLabel lbl_num = new JLabel("Total: " + Integer.toString(quiz.getNum()));
-					JLabel lbl_answered = new JLabel("Answered: " + Integer.toString(quiz.getCompleted()));
-					JLabel lbl_remaining = new JLabel("Remaining: " + Integer.toString(quiz.getIncomplete()));
-					
-					box_stats.add(lbl_score);
-					box_stats.add(lbl_num);
-					box_stats.add(lbl_answered);
-					box_stats.add(lbl_remaining);
-					pnl_quiz.add(box_stats, BorderLayout.CENTER);
-					
-					// Panel displays current question and choices
-					str_answer = "";
+					this.add(btnNext, BorderLayout.PAGE_END);
+				}
+			}
+		};
+		
+		
+		// pnl_question is question interface
+		// Panel displays current question and choices
+		JPanel pnl_question = new JPanel(new BorderLayout(0,0)) {
+			private static final long serialVersionUID = 1L;
+			private String str_answer;
+			
+			// Override paintComponent method
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				if(!quiz.isComplete()) {
 					HashMap<String,Object> current = quiz.getCurrent();
-					JPanel pnl_current = new JPanel(new BorderLayout(0,0));
 					JLabel lbl_question = new JLabel((String)current.get("Question"));
-					pnl_current.add(lbl_question, BorderLayout.PAGE_START);
+					this.add(lbl_question, BorderLayout.PAGE_START);
 					DefaultListModel<String> lst_answer = new DefaultListModel<String>();
 					JTextField txt_answer = new JTextField(30);
+					
 					if(current.get("Choices") instanceof ArrayList<?>) {
 						@SuppressWarnings (value="unchecked")
 						ArrayList<String> choices = (ArrayList<String>)current.get("Choices");
@@ -325,14 +341,14 @@ public class QuizGUI {
 						for(String choice : choices) {
 							lst_answer.addElement(choice);
 						}
-						pnl_current.add(list, BorderLayout.CENTER);
+						this.add(list, BorderLayout.CENTER);
 						int selected = list.getSelectedIndex();
 						if(selected >= 0) {
 							str_answer = lst_answer.elementAt(selected);
 						}
 					}
 					else {
-						pnl_current.add(txt_answer, BorderLayout.AFTER_LAST_LINE);
+						this.add(txt_answer, BorderLayout.AFTER_LAST_LINE);
 						str_answer = txt_answer.getText();
 					}
 					
@@ -341,13 +357,16 @@ public class QuizGUI {
 					btnSubmit.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							// Validate answer
-							quiz.answerCurrent((Object)str_answer);
+							quiz.answerCurrent(str_answer);
 							// Clear current data
-							lbl_question.setText("");
-							lst_answer.clear();
-							txt_answer.setText("");
+							validate();
+							repaint();
+							updateUI();
 							// Return to main card
 							CardLayout c = (CardLayout)pnl_cards.getLayout();
+							pnl_quiz.validate();
+							pnl_quiz.repaint();
+							pnl_quiz.updateUI();
 							c.previous(pnl_cards);
 						}
 					});
@@ -359,15 +378,17 @@ public class QuizGUI {
 							c.previous(pnl_cards);
 						}
 					});
+					
 					box_subcan.add(btnSubmit);
 					box_subcan.add(btnCancel);
-					pnl_question.add(pnl_current, BorderLayout.CENTER);
-					pnl_question.add(box_subcan, BorderLayout.PAGE_END);
-					
+					this.add(box_subcan, BorderLayout.PAGE_END);
 				}
 			}
-		});
+		};
+		
 		pnl_cards.add(btnStart, BorderLayout.CENTER);
+		pnl_cards.add(pnl_quiz, "Quiz");
+		pnl_cards.add(pnl_question, "Question");
 		
 			
 		return pnl_cards;
