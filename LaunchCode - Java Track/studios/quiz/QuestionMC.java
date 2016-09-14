@@ -55,7 +55,7 @@ public class QuestionMC extends Question {
 			return super.isCorrect(choices.get((int)input).toLowerCase());
 		}
 		else if(input instanceof String) {
-			return super.isCorrect(choices.get(Alphabet.AtoI((String)input)).toLowerCase());
+			return super.isCorrect(input);
 		}
 		else if(input instanceof Character) {
 			return super.isCorrect(choices.get(Alphabet.AtoI((Character)input)).toLowerCase());
