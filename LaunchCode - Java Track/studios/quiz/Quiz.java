@@ -1,7 +1,6 @@
 package quiz;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Quiz {
 	protected ArrayList<Question> questions;
@@ -15,8 +14,14 @@ public class Quiz {
 		completed = false;
 	}
 	
-	public HashMap<String, Object> getCurrent() {
-		return questions.get(current).output();
+	public String getCurrentQ() {
+		return questions.get(current).getQtext();
+	}
+	public ArrayList<String> getChoices() {
+		if(questions.get(current) instanceof QuestionMC) {
+			return ((QuestionMC)questions.get(current)).getChoices();
+		}
+		else return null;
 	}
 	
 	public void answerCurrent(Object input) {

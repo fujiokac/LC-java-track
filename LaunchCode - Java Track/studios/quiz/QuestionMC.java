@@ -1,6 +1,5 @@
 package quiz;
 
-import java.util.HashMap;
 import java.util.ArrayList;
 
 public class QuestionMC extends Question {
@@ -16,10 +15,7 @@ public class QuestionMC extends Question {
 	    protected static int getNum(char input) {
 	        return valueOf(String.valueOf(input)).ordinal();
 	    }
-	    protected static int AtoI(String input) {
-			return getNum(input.substring(0,1).toUpperCase());
-		}
-		
+	    
 		protected static int AtoI(char input) {
 			return getNum(Character.toUpperCase(input));
 		}
@@ -63,11 +59,7 @@ public class QuestionMC extends Question {
 		else return false;
 	}
 	
-	
-	@Override
-	protected HashMap<String, Object> output() {
-		HashMap<String, Object> output = super.output();
-		output.put("Choices", choices);
-		return output;
+	protected ArrayList<String> getChoices() {
+		return choices;
 	}
 }

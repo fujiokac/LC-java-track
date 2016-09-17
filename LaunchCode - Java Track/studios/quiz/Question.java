@@ -1,7 +1,5 @@
 package quiz;
 
-import java.util.HashMap;
-
 public class Question {
 	private String Qtext;
 	private String answer;
@@ -32,11 +30,5 @@ public class Question {
 			return answer.equals(((String)input).toLowerCase());
 		}
 		return false;
-	}
-	
-	protected HashMap<String, Object> output() {
-		HashMap<String, Object> output = new HashMap<String, Object>(1);
-		output.put("Question", Qtext);
-		return output;
 	}
 }

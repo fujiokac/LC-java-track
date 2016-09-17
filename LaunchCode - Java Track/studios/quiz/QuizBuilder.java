@@ -20,6 +20,15 @@ public class QuizBuilder extends Quiz{
 		questions.add(question);
 	}
 	
+	public void testBuild() {
+		ArrayList<String> choices = new ArrayList<String>();
+		choices.add("Hi");
+		choices.add("Bye");
+		this.addQuestion("Hello?", choices.get(0), choices);
+		this.addQuestion("Goodbye", "ok");
+		
+	}
+	
 	
 	public Quiz finalQuiz() {
 		return (Quiz)this;
