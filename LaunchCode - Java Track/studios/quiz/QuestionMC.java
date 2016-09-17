@@ -23,21 +23,20 @@ public class QuestionMC extends Question {
 	
 	public QuestionMC(String Qtext, String answer, ArrayList<String> choices) {
 		super(Qtext, answer);
-		this.choices = choices;
-	}
-	
-	public QuestionMC(String Qtext) {
-		super(Qtext, "");
-		choices = new ArrayList<String>();
+		this.choices = new ArrayList<String>();
+		for(int i = 0; i < choices.size(); i++) {
+			String choice = choices.get(i);
+			this.choices.add(choice.toLowerCase());
+		}
 	}
 	
 	@Override
 	public Boolean hasAnswer() {
+		System.out.println(choices);
+		System.out.println(super.getAnswer());
 		return choices.contains(super.getAnswer());
 	}
-	protected void addChoice(String choice) {
-		choices.add(choice);
-	}
+	
 	
 	// Returns number of choices
 	public int getNum() {
