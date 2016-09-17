@@ -95,6 +95,8 @@ public class QuizGUI {
 					// When quiz is completed
 					// Very basic, implement more here
 					pnl_question.removeAll();
+					pnl_question.revalidate();
+					pnl_question.repaint();
 					JLabel lbl_complete = new JLabel("Quiz Complete");
 					//lbl_complete.setHorizontalTextPosition(SwingConstants.CENTER);
 					pnl_question.add(lbl_complete, BorderLayout.PAGE_START);
@@ -351,6 +353,19 @@ public class QuizGUI {
 		});
 	}
 
+	// Code to set default font by Romain Hippeau
+	// https://stackoverflow.com/users/313137/romain-hippeau
+	public static void setUIFont (javax.swing.plaf.FontUIResource f){
+		java.util.Enumeration keys = UIManager.getDefaults().keys();
+		while (keys.hasMoreElements()) {
+			Object key = keys.nextElement();
+			Object value = UIManager.get (key);
+			if (value != null && value instanceof javax.swing.plaf.FontUIResource) {
+				UIManager.put (key, f);
+			}
+	    }
+	}
+	
 	/**
 	 * Create the application.
 	 */
@@ -358,13 +373,14 @@ public class QuizGUI {
 		initialize();
 		QB = new QuizBuilder();
 		// Fills QuizBuilder with test input
-		// QB.testBuild();
+		QB.testBuild();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		setUIFont (new javax.swing.plaf.FontUIResource("Verdana",Font.PLAIN,20));
 		frame = new JFrame();
 		
 	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
