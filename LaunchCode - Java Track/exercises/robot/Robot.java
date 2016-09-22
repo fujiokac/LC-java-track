@@ -46,12 +46,20 @@ public class Robot {
 		this.direction = Direction.valueOf(direction.toUpperCase());
 	}
 	
-	private Robot(Robot copy) {
+	protected Robot(Robot copy) {
 		this.name = copy.name;
 		this.posX = copy.posX;
 		this.posY = copy.posY;
 		this.speed = copy.speed;
 		this.direction = copy.direction;
+	}
+	
+	protected void become(Robot target) {
+		this.name = target.name;
+		this.posX = target.posX;
+		this.posY = target.posY;
+		this.speed = target.speed;
+		this.direction = target.direction;
 	}
 	
 	public void move(int time) {
@@ -107,6 +115,4 @@ public class Robot {
 	public Robot clone() {
 		return new Robot(this);
 	}
-	
-
 }
